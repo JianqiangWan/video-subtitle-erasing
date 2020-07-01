@@ -31,24 +31,24 @@ class SegDataset(Dataset):
         label_path = 'data/frame_with_mask/' + self.image_names[index] + '.png'
 
         image = cv2.imread(image_path, 1)
-        vis_image = image.copy()
         height, width, _ = image.shape
 
         label = cv2.imread(label_path, 0)
 
-        print(image.shape, label.shape, self.image_names[index])
+        image = cv2.resize(image, (480, 256), interpolation = cv2.INTER_LINEAR)
+        vis_image = image.copy()
+        label = cv2.resize(label, (480, 256), interpolation = cv2.INTER_NEAREST)
+        # padding_h = height % 32
+        # padding_w = width % 32
 
-        padding_h = height % 32
-        padding_w = width % 32
+        # if padding_h > 0:
+        #     padding_h = 32 - padding_h
+        # if padding_w > 0:
+        #     padding_w = 32 - padding_w
 
-        if padding_h > 0:
-            padding_h = 32 - padding_h
-        if padding_w > 0:
-            padding_w = 32 - padding_w
-
-        padding_value = (104, 116, 124)
-        image = cv2.copyMakeBorder(image, 0, padding_h, 0, padding_w, cv2.BORDER_CONSTANT, value=padding_value)
-        label = cv2.copyMakeBorder(label, 0, padding_h, 0, padding_w, cv2.BORDER_CONSTANT, value=0)
+        # padding_value = (104, 116, 124)
+        # image = cv2.copyMakeBorder(image, 0, padding_h, 0, padding_w, cv2.BORDER_CONSTANT, value=padding_value)
+        # label = cv2.copyMakeBorder(label, 0, padding_h, 0, padding_w, cv2.BORDER_CONSTANT, value=0)
 
         label = (label >0).astype(np.float32)
 
