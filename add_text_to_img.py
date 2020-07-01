@@ -28,21 +28,23 @@ def text_border(draw, text, x, y, font, shadowcolor, fillcolor):
     # now draw the text over it
     draw.text((x, y), text, font=font, fill=fillcolor)
 
-fontpath = './Fonts/Alibaba-PuHuiTi-Bold.ttf'
+fontpath = './data/Fonts/Alibaba-PuHuiTi-Bold.ttf'
 font = ImageFont.truetype(fontpath, 20)
 
-with open('3500常用汉字.txt', 'r', encoding='utf-8') as f:
+with open('./data/3500常用汉字.txt', 'r', encoding='utf-8') as f:
     characters = f.read().splitlines()
 
 random.shuffle(characters)
 
 
+train_seg_file = open('./data/train_seg.txt', 'w')
+
 # 读取视频
-for j in range(1, 100):
+for j in range(1, 50):
 
 
     #获得视频的格式
-    videoCapture = cv2.VideoCapture('./uc_200/' + str(j) + '.mp4')
+    videoCapture = cv2.VideoCapture('./data/uc_200/' + str(j) + '.mp4')
     
     #获得码率及尺寸
     fps = videoCapture.get(cv2.CAP_PROP_FPS)
@@ -56,9 +58,9 @@ for j in range(1, 100):
     step = 1
 
     # 帧存放目录
-    frames_dir = 'frames/' + str(j) + '/'
-    frames_with_mask_dir = 'frames_with_mask/' + str(j) + '/'
-    frames_with_new_char_dir = 'frames_with_new_char/' + str(j) + '/'
+    frames_dir = './data/frame/' + str(j) + '/'
+    frames_with_mask_dir = './data/frame_with_mask/' + str(j) + '/'
+    frames_with_new_char_dir = './data/frame_with_new_char/' + str(j) + '/'
     
     if not os.path.exists(frames_dir):
         os.makedirs(frames_dir)
@@ -110,20 +112,27 @@ for j in range(1, 100):
         coords = [(chars_x, chars_y + 2), (chars_x, chars_y + chars_h),
                 (chars_x + chars_w, chars_y + chars_h), (chars_x + chars_w, chars_y + 2)]
         
+        valid_height = chars_y + chars_h + 15
+        start_height = 100
+        start_width = 80
+
         if np.random.uniform() > 0.15:
             
             text_border(draw, chars, chars_x, chars_y, font, (0, 0, 0), (240, 240, 240))
             
             img = np.array(img_pil)
-            cv2.imwrite(frames_with_new_char_dir + imgId, img)
+            cv2.imwrite(frames_with_new_char_dir + imgId, img[start_height:valid_height, start_width:-start_width, :])
                 
             cv2.rectangle(mask, (chars_x, chars_y + 2), (chars_x + chars_w, chars_y + chars_h), (255,255,255), -1) 
-            cv2.imwrite(frames_with_mask_dir + imgId[:-3] + 'png', mask)
+            cv2.imwrite(frames_with_mask_dir + imgId[:-3] + 'png', mask[start_height:valid_height, start_width:-start_width])
+
+            train_seg_file.write(str(j) + '/' + imgId[:-4] + '\n')
         
         else:
             
             img = np.array(img_pil)
-            cv2.imwrite(frames_with_new_char_dir + imgId, img)
+            cv2.imwrite(frames_with_new_char_dir + imgId, img[start_height:valid_height, start_width:-start_width, :])
             
-            cv2.imwrite(frames_with_mask_dir + imgId[:-3] + 'png', mask)
+            cv2.imwrite(frames_with_mask_dir + imgId[:-3] + 'png', mask[start_height:valid_height, start_width:-start_width])
     
+train_seg_file.close()
