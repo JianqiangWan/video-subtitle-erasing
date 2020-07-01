@@ -36,6 +36,8 @@ class SegDataset(Dataset):
 
         label = cv2.imread(label_path, 0)
 
+        print(image.shape, label.shape, self.image_names[index])
+
         padding_h = height % 32
         padding_w = width % 32
 
@@ -63,5 +65,5 @@ class SegDataset(Dataset):
         weight_matrix = weight_matrix[np.newaxis, ...]
 
         label = label[np.newaxis, ...]
-        
+
         return image, vis_image, label, weight_matrix, self.dataset_length

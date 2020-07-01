@@ -40,7 +40,7 @@ random.shuffle(characters)
 train_seg_file = open('./data/train_seg.txt', 'w')
 
 # 读取视频
-for j in range(1, 50):
+for j in range(1, 30):
 
 
     #获得视频的格式
@@ -107,14 +107,14 @@ for j in range(1, 50):
         
         # w, h
         chars_w, chars_h = font.getsize(chars)
-        chars_x, chars_y = int((width - chars_w)/2), 260
+        chars_x, chars_y = int((width - chars_w)/2), int(2*height/3)
         
         coords = [(chars_x, chars_y + 2), (chars_x, chars_y + chars_h),
                 (chars_x + chars_w, chars_y + chars_h), (chars_x + chars_w, chars_y + 2)]
         
         valid_height = chars_y + chars_h + 15
-        start_height = 100
-        start_width = 80
+        start_height = int(height / 5)
+        start_width = int(width / 6)
 
         if np.random.uniform() > 0.15:
             

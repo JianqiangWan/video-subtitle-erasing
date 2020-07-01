@@ -3,7 +3,7 @@ import os
 import torch
 import torch.nn as nn
 from model.segnet import SegNet
-from datasets import SegDataset
+from dataset.dataset import SegDataset
 from torch.utils.data import Dataset, DataLoader
 
 INI_LEARNING_RATE = 1e-3
