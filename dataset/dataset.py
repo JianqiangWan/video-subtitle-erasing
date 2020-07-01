@@ -60,5 +60,8 @@ class SegDataset(Dataset):
         total_sum = pos_sum + neg_sum
 
         weight_matrix = (pos_sum / total_sum) * (1 - label) + (neg_sum / total_sum) * label
+        weight_matrix = weight_matrix[np.newaxis, ...]
 
+        label = label[np.newaxis, ...]
+        
         return image, vis_image, label, weight_matrix, self.dataset_length
