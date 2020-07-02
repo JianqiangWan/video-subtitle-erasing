@@ -7,7 +7,7 @@ from dataset.dataset import SegDataset
 from torch.utils.data import Dataset, DataLoader
 from utils import vis_pred_result
 
-INI_LEARNING_RATE = 1e-3
+INI_LEARNING_RATE = 2e-3
 WEIGHT_DECAY = 5e-4
 EPOCHES = 10000
 
@@ -144,11 +144,11 @@ def main():
 
             optimizer.step()
 
-            if global_step % 4 == 0:
+            if global_step % 10 == 0:
                 print('epoche {} i_iter/total {}/{} loss {:.2f}'.format(\
                        epoch, i_iter, int(dataset_length[0].data), loss))
             
-            if global_step % 5 == 0:
+            if global_step % 100 == 0:
                 vis_pred_result(vis_image, gt_mask, pred_mask, args.train_debug_vis_dir + str(global_step) + '.png')
                 
             if global_step % 1e4 == 0:

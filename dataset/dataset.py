@@ -7,10 +7,10 @@ from torchvision import transforms as T
 
 class SegDataset(Dataset):
 
-    def __init__(self):
+    def __init__(self, mode='train'):
         
-
-        file_dir = 'data/train_seg.txt'
+        self.mode = mode
+        file_dir = 'data/' + self.mode + '_seg.txt'
 
         with open(file_dir, 'r') as f:
             self.image_names = f.read().splitlines()
@@ -27,8 +27,13 @@ class SegDataset(Dataset):
 
     def __getitem__(self, index):
 
-        image_path = 'data/frame_with_new_char/' + self.image_names[index] + '.jpg'
-        label_path = 'data/frame_with_mask/' + self.image_names[index] + '.png'
+        if self.mode == 'train':
+            image_path = 'data/frame_with_new_char/' + self.image_names[index] + '.jpg'
+            label_path = 'data/frame_with_mask/' + self.image_names[index] + '.png'
+
+        elif self.mode == 'test':
+            image_path = 'data/frame_with_new_char_test/' + self.image_names[index] + '.jpg'
+            label_path = 'data/frame_with_mask_test/' + self.image_names[index] + '.png'   
 
         image = cv2.imread(image_path, 1)
         height, width, _ = image.shape
@@ -66,4 +71,4 @@ class SegDataset(Dataset):
 
         label = label[np.newaxis, ...]
 
-        return image, vis_image, label, weight_matrix, self.dataset_length
+        return image, vis_image, label, weight_matrix, self.dataset_length, self.image_names[index]
