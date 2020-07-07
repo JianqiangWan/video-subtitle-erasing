@@ -27,13 +27,8 @@ class SegDataset(Dataset):
 
     def __getitem__(self, index):
 
-        if self.mode == 'train':
-            image_path = 'data/frame_with_new_char/' + self.image_names[index] + '.jpg'
-            label_path = 'data/frame_with_mask/' + self.image_names[index] + '.png'
-
-        elif self.mode == 'test':
-            image_path = 'data/frame_with_new_char_test/' + self.image_names[index] + '.jpg'
-            label_path = 'data/frame_with_mask_test/' + self.image_names[index] + '.png'   
+        image_path = 'data/frame_with_new_char_' + self.mode + '/' + self.image_names[index] + '.jpg'
+        label_path = 'data/frame_with_mask_' + self.mode + '/' + self.image_names[index] + '.png'   
 
         image = cv2.imread(image_path, 1)
         height, width, _ = image.shape

@@ -122,7 +122,7 @@ def main():
         weight_decay=WEIGHT_DECAY
     )
 
-    dataloader = DataLoader(SegDataset(), batch_size=8, shuffle=True, num_workers=4)
+    dataloader = DataLoader(SegDataset(mode='train'), batch_size=8, shuffle=True, num_workers=4)
 
     global_step = 0
 
@@ -132,7 +132,7 @@ def main():
 
             global_step += 1
 
-            Input_image, vis_image, gt_mask, weight_matrix, dataset_length = batch_data
+            Input_image, vis_image, gt_mask, weight_matrix, dataset_length, image_name = batch_data
 
             optimizer.zero_grad()
 
@@ -145,10 +145,10 @@ def main():
             optimizer.step()
 
             if global_step % 10 == 0:
-                print('epoche {} i_iter/total {}/{} loss {:.2f}'.format(\
+                print('epoche {} i_iter/total {}/{} loss {:.4f}'.format(\
                        epoch, i_iter, int(dataset_length[0].data), loss))
             
-            if global_step % 100 == 0:
+            if global_step % 10000 == 0:
                 vis_pred_result(vis_image, gt_mask, pred_mask, args.train_debug_vis_dir + str(global_step) + '.png')
                 
             if global_step % 1e4 == 0:

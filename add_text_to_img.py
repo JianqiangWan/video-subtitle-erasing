@@ -37,10 +37,12 @@ with open('./data/3500常用汉字.txt', 'r', encoding='utf-8') as f:
 random.shuffle(characters)
 
 
-test_seg_file = open('./data/test_seg.txt', 'w')
+mode = 'train'
+
+seg_file = open('./data/' + mode + '_seg.txt', 'w')
 
 # 读取视频
-for j in range(30, 40):
+for j in range(1, 30):
 
 
     #获得视频的格式
@@ -58,9 +60,9 @@ for j in range(30, 40):
     step = 1
 
     # 帧存放目录
-    frames_dir = './data/frame_test/' + str(j) + '/'
-    frames_with_mask_dir = './data/frame_with_mask_test/' + str(j) + '/'
-    frames_with_new_char_dir = './data/frame_with_new_char_test/' + str(j) + '/'
+    frames_dir = './data/frame_' + mode + '/' + str(j) + '/'
+    frames_with_mask_dir = './data/frame_with_mask_' + mode + '/' + str(j) + '/'
+    frames_with_new_char_dir = './data/frame_with_new_char_' + mode + '/' + str(j) + '/'
     
     if not os.path.exists(frames_dir):
         os.makedirs(frames_dir)
@@ -126,7 +128,7 @@ for j in range(30, 40):
             cv2.rectangle(mask, (chars_x, chars_y + 2), (chars_x + chars_w, chars_y + chars_h), (255,255,255), -1) 
             cv2.imwrite(frames_with_mask_dir + imgId[:-3] + 'png', mask[start_height:valid_height, start_width:-start_width])
 
-            test_seg_file.write(str(j) + '/' + imgId[:-4] + '\n')
+            seg_file.write(str(j) + '/' + imgId[:-4] + '\n')
         
         else:
             
@@ -135,4 +137,4 @@ for j in range(30, 40):
             
             cv2.imwrite(frames_with_mask_dir + imgId[:-3] + 'png', mask[start_height:valid_height, start_width:-start_width])
     
-test_seg_file.close()
+seg_file.close()
